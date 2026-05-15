@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Кликер</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Golos Text', sans-serif;
+            background-color: #fccb44;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .score {
+            font-size: 32px;
+            margin: 30px 0;
+            font-weight: 600;
+        }
+
+        .click-btn {
+            width: 200px;
+            height: 200px;
+            background-color: #fccb44;
+            border: none;
+            cursor: pointer;
+            margin: 20px 0;
+            /* ЗАГЛУШКА ДЛЯ ИЗОБРАЖЕНИЯ - замените background-image на свое */
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23ddd" width="200" height="200"/><text x="50%" y="50%" font-family="Arial" font-size="20" fill="%23999" text-anchor="middle" dy=".3em">CAT IMAGE 1</text></svg>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            transition: transform 0.1s;
+        }
+
+        .click-btn:active {
+            transform: scale(0.95);
+        }
+
+        .shop-label {
+            font-size: 32px;
+            background-color: #f7f68b;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .buy-btn, .skin-btn {
+            background-color: #c29846;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-family: 'Golos Text', sans-serif;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 200px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .buy-btn:hover, .skin-btn:hover {
+            background-color: #fccb44;
+            color: black;
+        }
+
+        .buy-btn:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        .skin-btn.purchased {
+            display: none;
+        }
+
+        /* Класс для скина - замените background-image */
+        .skin-active {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23aaa" width="200" height="200"/><text x="50%" y="50%" font-family="Arial" font-size="20" fill="%23666" text-anchor="middle" dy=".3em">CAT IMAGE 2</text></svg>') !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="score" id="score">☕ 0</div>
+    
+    <button class="click-btn" id="clickBtn"></button>
+    
+    <div class="shop-label">☕ МАГАЗИН<br>купить улучшение (+1) за клик</div>
+    
+    <button class="buy-btn" id="buyBtn">купить 10</button>
+    <button class="skin-btn" id="skinBtn">Купить скин (100)</button>
+
+    <script>
+        // Состояние игры
+        let score = 0;
+        let clickPower = 1;
+        let price = 10;
+
+        const scoreEl = document.getElementById('score');
+        const clickBtn = document.getElementById('clickBtn');
+        const buyBtn = document.getElementById('buyBtn');
+        const skinBtn = document.getElementById('skinBtn');
+
+        // Обновление интерфейса
+        function update() {
+            scoreEl.textContent = `☕ ${score}`;
+            
+            if (score >= price) {
+                buyBtn.disabled = false;
+                buyBtn.textContent = `купить ${price}`;
+            } else {
+                buyBtn.disabled = true;
+                buyBtn.textContent = `нужно ${price}`;
+            }
+        }
+
+        // Клик по основной кнопке
+        clickBtn.addEventListener('click', () => {
+            score += clickPower;
+            update();
+        });
+
+        // Покупка улучшения
+        buyBtn.addEventListener('click', () => {
+            if (score >= price) {
+                score -= price;
+                clickPower += 1;
+                price = Math.floor(price * 1.5);
+                update();
+            }
+        });
+
+        // Покупка скина
+        skinBtn.addEventListener('click', () => {
+            if (score >= 100) {
+                clickBtn.classList.add('skin-active');
+                skinBtn.classList.add('purchased');
+                score -= 100;
+                update();
+            }
+        });
+
+        // Инициализация
+        update();
+    </script>
+</body>
+</html>
